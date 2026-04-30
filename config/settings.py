@@ -129,3 +129,6 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API for generating study plans',
     'VERSION': '1.0.0',
 }
+
+
+ALLOWED_HOSTS = ['*']
