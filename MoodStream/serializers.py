@@ -2,7 +2,14 @@ from rest_framework import serializers
 from .models import Mood, Content, Favorites, History
 
 
-class MoodSerializer(serializers.Serializer):
+
+class MoodSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Mood
+        fields = ['name']
+
+class RecommendationSerializer(serializers.Serializer):
     mood = serializers.CharField()
     content_type = serializers.ChoiceField(choices=["video", "music", "quote"])
 

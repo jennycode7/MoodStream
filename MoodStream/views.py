@@ -1,15 +1,15 @@
-from rest_framework.generics import GenericAPIView
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from .serializers import MoodSerializer
-from .models import Mood, History
+from .serializers import MoodSerializer, HistorySerializer, FavoritesSerializer, ContentSerializer
+from .models import Mood, History, Favorites, Content
 from .services import get_recommendations
 
 # Create your views here.
 
-class RecommendationView(GenericAPIView):
-    #permission_classes = [IsAuthenticated]
+class RecommendationView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = MoodSerializer
 
     def post(self, request, *args, **kwargs):
@@ -31,16 +31,45 @@ class RecommendationView(GenericAPIView):
         results = get_recommendations(request.user, mood, content_type)
 
         # Save history (only DB content)
-        History.objects.bulk_create([
-            History(user=request.user, content_id=item["id"])
-            for item in results if item.get("id")
-        ])
+        history_objects = []
 
-        print("RAW:", request.data.get("content_type"))
-        print("VALIDATED:", serializer.validated_data.get("content_type"))
+        for item in results:
+            content = Content.objects.filter(url=item["url"]).first()
+
+            if content:
+                history_objects.append(
+                    History(
+                        user=request.user,
+                        content=content
+                    )
+                )
+
+        History.objects.bulk_create(history_objects)
 
         return Response({
+            "user": request.user.username,
             "mood": mood.name,
             "results": results
         }, status=status.HTTP_200_OK)
+
+class MoodView(generics.ListAPIView):
+    queryset = Mood.objects.all()
+    serializer_class = MoodSerializer
+    permission_class = [IsAuthenticated]
+
     
+class HistoryView(generics.ListAPIView):
+    queryset = History.objects.all()    
+    serializer_class = HistorySerializer
+    permission_class = [IsAuthenticated]
+
+
+class FavoritesView(generics.ListCreateAPIView):
+    queryset = Favorites.objects.all()
+    serializer_class = FavoritesSerializer
+    permission_class = [IsAuthenticated]
+
+class ContentView(generics.ListAPIView):
+    queryset = Content.objects.all()
+    serializer_class = ContentSerializer
+    permission_class = [IsAuthenticated]

@@ -26,6 +26,9 @@ class Content(models.Model):
     url = models.URLField()
     text = models.TextField()
 
+    def __str__(self):
+        return self.title
+
 class History(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.ForeignKey(Content, on_delete=models.CASCADE)
