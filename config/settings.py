@@ -124,6 +124,11 @@ STATIC_URL = 'static/'
 
 AUTH_USER_MODEL = 'accounts.User'
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Mood Content Recommendation API',
     'DESCRIPTION': 'API for generating study plans',
