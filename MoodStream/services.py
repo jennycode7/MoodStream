@@ -2,7 +2,7 @@ import random
 import requests
 from django.conf import settings
 from .models import Content, History, Mood
-
+from .external_api import fetch_youtube_videos, fetch_spotify_tracks
 
 
 def fetch_external_content(mood, content_type):
@@ -14,37 +14,52 @@ def fetch_external_content(mood, content_type):
 
         if not mood_obj:
             mood_obj = Mood.objects.create(name=mood)
-        print('check here')
+
+
         #  VIDEO
         if content_type == "video":
-            url = f"https://www.youtube.com/results?search_query={mood}+{content_type}"
+            youtube_results = fetch_youtube_videos(mood)
 
-            content, _ = Content.objects.get_or_create(
-                url=url,
-                defaults={
-                    "title": f"{mood} video",
-                    "content_type": "video",
-                    "mood": mood_obj
-                }
-            )
 
-            results.append({"url": content.url})
+            for item in youtube_results:
+                content, _ = Content.objects.get_or_create(
+                    url=item['url'],
+                    defaults={
+                        "title": item['title'],
+                        "content_type": "video",
+                        "mood": mood_obj
+                    }
+                )
+
+                results.append({
+                    'id': content.id,
+                    "title": content.title,
+                    "url": content.url,
+                    "thumbnail": item['thumbnail']
+                })
 
         #  SONG
         elif content_type == "music":
-            print('music check')
-            url = f"https://open.spotify.com/search/{mood.name}%20music"
+            spotify_results = fetch_spotify_tracks(mood)
 
-            content, _ = Content.objects.get_or_create(
-                url=url,
-                defaults={
-                    "title": f"{mood} song",
-                    "content_type": "song",
-                    "mood": mood_obj
-                }
-            )
+            for item in spotify_results:
+                content, _ = Content.objects.get_or_create(
+                    url=item['url'],
+                    defaults={
+                        "title": item['title'],
+                        "content_type": "song",
+                        "mood": mood_obj
+                    }
+                )
 
-            results.append({"url": content.url})
+                results.append({
+                    "id": content.id,
+                    "title": item["title"],
+                    "artist": item["artist"],
+                    "url": item["url"],
+                    "preview": item["preview"],
+                    "image": item["image"]
+                })
     
 
         # QUOTES
@@ -54,6 +69,10 @@ def fetch_external_content(mood, content_type):
             if response.status_code == 200:
                 data = response.json()[0]
                 quote_text = data.get("q")
+                author = data.get("a")
+
+                if not quote_text:
+                    return results
 
                 url = f"https://zenquotes.io/?q={quote_text}"
 
@@ -67,15 +86,18 @@ def fetch_external_content(mood, content_type):
                     }
                 )
 
-                results.append({"url": content.url})
+                results.append({
+                    "text": quote_text,
+                    "author": author,
+                    "url": content.url
+                })
 
         else:
-            print("INVALID CONTENT TYPE:", content_type)
+            print("ZenQuotes API error:", response.text)
 
-    except Exception:
-        pass
+    except Exception as e:
+        print("ERROR:", str(e))
 
-    print("music ended")
     return results
 
 

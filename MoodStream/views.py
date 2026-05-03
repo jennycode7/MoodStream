@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from .serializers import MoodSerializer, HistorySerializer, FavoritesSerializer, ContentSerializer
+from .serializers import MoodSerializer, HistorySerializer, FavoritesSerializer, ContentSerializer, RecommendationSerializer
 from .models import Mood, History, Favorites, Content
 from .services import get_recommendations
 
@@ -10,7 +10,7 @@ from .services import get_recommendations
 
 class RecommendationView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = MoodSerializer
+    serializer_class = RecommendationSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

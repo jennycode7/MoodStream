@@ -1,10 +1,47 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.views import  APIView
 from .models import User
-from .serializers import UserSerializer
+from .serializers import UserSerializer, LoginSerializer
+from django.contrib.auth import login, authenticate, logout
+from rest_framework.response import Response
+from rest_framework.parsers import FormParser, MultiPartParser
 
 # Create your views here.
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+
+class LoginView(generics.GenericAPIView):
+    # parser_classes = [FormParser, MultiPartParser]
+    serializer_class = LoginSerializer
+
+
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = serializer.validated_data["user"]
+
+        login(request, user)
+
+        return Response({
+            "message": "Login successful",
+            "user": {
+                "id": user.id,
+                "username": user.username
+            }
+        }, status=status.HTTP_200_OK)
+
+
+
+class LogoutView(APIView):
+    def post(self, request):
+        logout(request)
+        return Response(
+            {"detail": "Logged out successfully"},
+            status=status.HTTP_200_OK
+        )
