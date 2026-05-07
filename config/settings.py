@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'MoodStream',
     'accounts',
     'rest_framework', 
-    'drf_spectacular'
+    'drf_spectacular',
+    'rest_framework_simplejwt'
 ]
 
 MIDDLEWARE = [
@@ -140,6 +141,12 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Mood Content Recommendation API',
     'DESCRIPTION': 'API for generating study plans',
     'VERSION': '1.0.0',
+
+    'SERVE_INCLUDE_SCHEMA': False,
+
+    'SECURITY': [
+        {'BearerAuth': []}
+    ],
 }
 
 

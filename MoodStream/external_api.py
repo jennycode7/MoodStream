@@ -9,7 +9,7 @@ def fetch_youtube_videos(mood):
         "part": "snippet",
         "q": f"{mood} music OR {mood} video",
         "key": settings.YOUTUBE_API_KEY,
-        "maxResults": 5,
+        "maxResults": 10,
         "type": "video"
     }
 

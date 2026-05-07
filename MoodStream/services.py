@@ -10,15 +10,24 @@ def fetch_external_content(mood, content_type):
 
     try:
         # get or create mood
-        mood_obj = Mood.objects.filter(name__iexact=mood).first()
+        # mood_obj = Mood.objects.filter(name__iexact=mood).first()
 
-        if not mood_obj:
-            mood_obj = Mood.objects.create(name=mood)
+        # if not mood_obj:
+        #     mood_obj = Mood.objects.create(name=mood)
+
+        if isinstance(mood, Mood):
+            mood_obj = mood
+        else:
+            mood_obj = Mood.objects.filter(name__iexact=mood).first()
+            
+            if not mood_obj:
+                mood_obj = Mood.objects.create(name=mood)
+
 
 
         #  VIDEO
         if content_type == "video":
-            youtube_results = fetch_youtube_videos(mood)
+            youtube_results = fetch_youtube_videos(mood_obj)
 
 
             for item in youtube_results:
@@ -40,7 +49,7 @@ def fetch_external_content(mood, content_type):
 
         #  SONG
         elif content_type == "music":
-            spotify_results = fetch_spotify_tracks(mood)
+            spotify_results = fetch_spotify_tracks(mood_obj)
 
             for item in spotify_results:
                 content, _ = Content.objects.get_or_create(
@@ -103,13 +112,16 @@ def fetch_external_content(mood, content_type):
 
 
 def get_recommendations(user, mood_name, content_type):
-    # 1. DB content
+
+    if isinstance(mood_name, Mood):
+        mood_name = mood_name.name
+
+
     contents = Content.objects.filter(
         mood__name__iexact=mood_name,
         content_type=content_type
     )
 
-    # 2. Remove seen
     seen_ids = History.objects.filter(user=user).values_list('content_id', flat=True)
     contents = contents.exclude(id__in=seen_ids)
 

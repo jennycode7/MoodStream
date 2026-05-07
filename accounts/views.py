@@ -6,6 +6,7 @@ from .serializers import UserSerializer, LoginSerializer
 from django.contrib.auth import login, authenticate, logout
 from rest_framework.response import Response
 from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your views here.
 
@@ -26,13 +27,17 @@ class LoginView(generics.GenericAPIView):
 
         user = serializer.validated_data["user"]
 
-        login(request, user)
+        refresh = RefreshToken.for_user(user)
 
         return Response({
             "message": "Login successful",
             "user": {
                 "id": user.id,
                 "username": user.username
+            }, 
+            "tokens": {
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
             }
         }, status=status.HTTP_200_OK)
 
