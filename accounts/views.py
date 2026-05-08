@@ -7,6 +7,7 @@ from django.contrib.auth import login, authenticate, logout
 from rest_framework.response import Response
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework_simplejwt.tokens import RefreshToken
+from drf_spectacular.utils import extend_schema
 
 # Create your views here.
 
@@ -19,6 +20,19 @@ class RegisterView(generics.CreateAPIView):
 class LoginView(generics.GenericAPIView):
     # parser_classes = [FormParser, MultiPartParser]
     serializer_class = LoginSerializer
+
+    @extend_schema(
+        description="Authenticate user and return JWT tokens. Also Email for username",
+        examples=[
+            {
+                "name": "Login Example",
+                "value": {
+                    "email": "user@example.com",
+                    "password": "password123"
+                }
+            }
+        ]
+    )
 
 
     def post(self, request):
