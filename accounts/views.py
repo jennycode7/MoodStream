@@ -21,18 +21,23 @@ class LoginView(generics.GenericAPIView):
     # parser_classes = [FormParser, MultiPartParser]
     serializer_class = LoginSerializer
 
-    @extend_schema(
-        description="Authenticate user and return JWT tokens. Also Email for username",
-        examples=[
-            {
-                "name": "Login Example",
-                "value": {
-                    "email": "user@example.com",
-                    "password": "password123"
-                }
-            }
-        ]
-    )
+    # @extend_schema(
+    #     description="Authenticate user and return JWT tokens",
+    #     request=LoginSerializer,
+    #     responses={
+    #         200: LoginResponseSerializer,
+    #         400: {"description": "Invalid credentials"}
+    #     },
+    #     examples=[
+    #         {
+    #             "name": "Login Example",
+    #             "value": {
+    #                 "email": "user@example.com",
+    #                 "password": "password123"
+    #             }
+    #         }
+    #     ]
+    # )
 
 
     def post(self, request):
