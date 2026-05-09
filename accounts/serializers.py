@@ -3,6 +3,12 @@ from django.contrib.auth import authenticate
 from .models import User
 
 
+class RegisterResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
+    access = serializers.CharField()
+    refresh = serializers.CharField()
+    user = serializers.DictField()
+
 class UserSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
 
@@ -29,7 +35,8 @@ class UserSerializer(serializers.ModelSerializer):
             return User.objects.create_user(
                     username=validated_data['username'],
                     email=validated_data.get('email'),
-                    password=validated_data['password']
+                    password=validated_data['password'],
+                    preferred_mood=validated_data['preferred_mood']
                 )
 
 
@@ -48,3 +55,14 @@ class LoginSerializer(serializers.Serializer):
 
         data["user"] = user
         return data
+
+
+class LoginResponseSerializer(serializers.Serializer):
+    message = serializers.CharField()
+    access = serializers.CharField()
+    refresh = serializers.CharField()
+    user = UserSerializer()
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()

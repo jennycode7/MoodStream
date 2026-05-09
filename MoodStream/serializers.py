@@ -38,6 +38,8 @@ class RecommendationSerializer(serializers.Serializer):
 
 
 class ContentSerializer(serializers.ModelSerializer):
+    mood = serializers.CharField(source="mood.name")
+
 
     class Meta:
         model = Content

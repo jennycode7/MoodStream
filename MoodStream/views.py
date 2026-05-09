@@ -5,11 +5,12 @@ from rest_framework import status
 from .serializers import MoodSerializer, HistorySerializer, FavoritesSerializer, ContentSerializer, RecommendationSerializer
 from .models import Mood, History, Favorites, Content
 from .services import get_recommendations
+from drf_spectacular.utils import extend_schema
 
 # Create your views here.
 
 class RecommendationView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_class = [IsAuthenticated]
     serializer_class = RecommendationSerializer
 
     def post(self, request, *args, **kwargs):
