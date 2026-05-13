@@ -1,12 +1,12 @@
 # MoodStream API Documentation
 
-Welcome to the MoodStream API 🎧
+Welcome to the MoodStream API 
 
 MoodStream is a mood-based content recommendation API that allows users to discover and save content such as music, movies, and quotes based on their emotions.
 
 ---
 
-## 🔗 Base URL
+## Base URL
 
 ```
 https://mood-stream.six.vercel.app/api/docs
@@ -14,7 +14,7 @@ https://mood-stream.six.vercel.app/api/docs
 
 ---
 
-## 📚 Documentation Sections
+## Documentation Sections
 
 * [Authentication](authentication.md)
 * [Users](users.md)
@@ -26,7 +26,7 @@ https://mood-stream.six.vercel.app/api/docs
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 1. Register a user
 2. Login to get JWT token
@@ -36,7 +36,7 @@ https://mood-stream.six.vercel.app/api/docs
 
 ---
 
-## 🔐 Authentication Type
+##  Authentication Type
 
 This API uses **JWT Authentication**
 
