@@ -81,7 +81,7 @@ POST /api/accounts/login/
 
 ---
 
-## 🔄 Refresh Access Token
+## Refresh Access Token
 
 Generate a new access token using a refresh token.
 
@@ -142,7 +142,7 @@ POST /api/accounts/logout/
 
 ---
 
-## 🔐 Authentication Method
+## Authentication Method
 
 This API uses **JWT (JSON Web Token)** authentication.
 
