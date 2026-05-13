@@ -46,10 +46,13 @@ class ContentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class FavoritesSerializer(serializers.ModelSerializer):
+    content_type = serializers.CharField(source='content.content_type')
 
     class Meta:
         model = Favorites
-        fields = '__all__'
+        fields = ['id', 'content', 'content_type', 'created_at']
+
+
 
 class HistorySerializer(serializers.ModelSerializer):
 

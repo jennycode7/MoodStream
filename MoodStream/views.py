@@ -10,7 +10,7 @@ from drf_spectacular.utils import extend_schema
 # Create your views here.
 
 class RecommendationView(generics.GenericAPIView):
-    permission_class = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = RecommendationSerializer
 
     def post(self, request, *args, **kwargs):
@@ -56,21 +56,21 @@ class RecommendationView(generics.GenericAPIView):
 class MoodView(generics.ListAPIView):
     queryset = Mood.objects.all()
     serializer_class = MoodSerializer
-    permission_class = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     
 class HistoryView(generics.ListAPIView):
     queryset = History.objects.all()    
     serializer_class = HistorySerializer
-    permission_class = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 
 class FavoritesView(generics.ListCreateAPIView):
     queryset = Favorites.objects.all()
     serializer_class = FavoritesSerializer
-    permission_class = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 class ContentView(generics.ListAPIView):
     queryset = Content.objects.all()
     serializer_class = ContentSerializer
-    permission_class = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
